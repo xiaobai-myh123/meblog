@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首页</title>
+  	<!-- mz的css -->
+     <link rel="stylesheet" type="text/css" th:href="@{/assets/waifu.css}"/>
+    <!--引入sementic-ui模板所需要的js-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/semantic.min.css}">
+    <!--自定义css-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<nav class="ui inverted attached segment segment m-padded-tb-mini m-shadow-small" th:replace="_fragments :: menu(1)" >
+</nav>
+<!--导航 end-->
+   <input type="hidden" name="currentPage" th:value="${currentPage}">
+  <!--中间内容-->
+  <div class="m-container m-padded-tb-big">
+    <div class="ui container">
+      <div class="ui stackable grid">
+        <!--左边博客列表-->
+        <div class="eleven wide column">
+			<!--header-->
+              <div class="ui top attached segment">
+                  <div class="ui middle aligned two column grid">
+                      <div class="column">
+                          <h3 class="ui teal header">博客</h3>
+                      </div>
+                      <div class="right aligned column">
+                          共 <h2 class="ui orange header m-inline-blok m-text-thin" th:text="${countBlogs}">14</h2>条
+                      </div>
+                  </div>
+              </div>
+          <!--content-->
+          <div id="table-container" th:fragment="indexList">
+         	<div class="ui attached  segment">
+            <div class="ui padded vertical segment m-padded-tb-large" th:each="blog : ${blogs}">
+              <div class="ui middle aligned grid mobile reversed stackable" >
+                <div class="eleven wide column">
+                  <h3 class="ui header"><a th:href="@{/blog/{id}(id=${blog.id})}" class="m-black" th:text="${blog.title}">你真的理解什么是财富自由吗？</a> </h3>
+                 <p class="m-text" th:text="|${blog.description}.....|"> 
+               			  正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...
+                 </p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img th:src="@{${blog.user.avatar}}" src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header" th:text="${blog.user.nickname}">小白</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> <span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2020-11-11</span> 
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> <span th:text="${blog.views}">2342</span> 
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.name}">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="five wide column">
+                 <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                    <img th:src="@{${blog.firstPicture}}"  src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>
+
+              </div>
+            </div>
+            </div>
+          
+            
+          <!--footer-->
+          <div class="ui bottom attached segment"  th:if="${totalPages}>1">
+            <div class="ui middle aligned two column grid">
+              <div class="column">
+         		  <a href="#" onclick="page(this)" th:attr="data-page=${currentPage-1}"  th:if="${currentPage>1}" class="ui mini teal basic button">上一页</a>
+              </div>
+              <div class="right aligned column">
+ 				  <a href="#" onclick="page(this)" th:attr="data-page=${currentPage+1}" th:if="${currentPage<totalPages}" class="ui mini teal basic button">下一页</a>
+              </div>
+            </div>
+          </div>
+	      </div>
+		</div>
+        <!--右边的top-->
+        <div class="five wide column">
+	         <!--分类-->
+	         <div class="ui segments">
+	           <div class="ui secondary segment">
+	             <div class="ui two column grid">
+	               <div class="column">
+	                 <i class="idea icon"></i>分类
+	               </div>
+	               <div class="right aligned column">
+	                 <a href="#" th:href="@{/types/0}">more <i class="angle double right icon"></i></a>
+	               </div>
+	             </div>
+	           </div>
+	           <div class="ui teal segment">
+	             <div class="ui fluid vertical menu">
+	               <a th:href="@{/types/}+${type.id}" class="item" th:each="type : ${types}">
+	               	  <span th:text="${type.name}">学习日志</span> 
+	                 <div class="ui teal basic left pointing label" th:text="${type.count}">13</div>
+	               </a>
+	             </div>
+	           </div>
+	         </div>
+	
+	         <!--标签-->
+	         <div class="ui segments m-margin-top-large">
+	           <div class="ui secondary segment">
+	             <div class="ui two column grid">
+	               <div class="column">
+	                 <i class="tags icon"></i>标签
+	               </div>
+	               <div class="right aligned column">
+	                 <a href="#" th:href="@{/tags/0}">more <i class="angle double right icon"></i></a>
+	               </div>
+	             </div>
+	           </div>
+	           <div class="ui teal segment">
+	             <a href="#" th:each="tag : ${tags}" th:href="@{/tags/{id}(id=${tag.id})}" class="ui teal basic left pointing label m-margin-tb-tiny">
+	             	<span th:text="${tag.name}">方法论</span>
+	            	<div th:text="${tag.count}" class="detail">23</div>
+	             </a>
+	          </div>
+	     </div>
+	
+	         <!--最新推荐-->
+	         <div class="ui segments m-margin-top-large">
+	           <div class="ui secondary segment ">
+	             <i class="bookmark icon"></i>最新推荐
+	           </div>
+	           <div class="ui segment" th:each="blog : ${recommendBlogs}">
+	             <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" th:text="${blog.title}" class="m-black m-text-thin">用户故事（User Story）</a>
+	           </div>
+	         </div>
+	
+	         <!--二维码-->
+	         <h4 class="ui horizontal divider header m-margin-top-large">联系博主（微信）</h4>
+	         <div class="ui card centered" style="width: 11em">
+	             <img  src="../static/images/loginTX.png" th:src="@{/images/mz.jpg}" alt="" class="ui rounded image" >
+	         </div>
+	         <div class="ui basic segment">
+	             <a href="#" class="ui circular icon button m-margin-left-big"><i class="github icon"></i></a>
+	             <a href="#" class="ui wc circular icon button"><i class="weixin icon"></i></a>
+	             <a href="#" class="ui circular icon button"><i class="qq icon" data-content="123456789" data-position="bottom center"></i></a>
+	             <a href="#" class="ui circular icon button"><i class=" icon">B</i></a>
+	         </div>
+	         <div class="ui wc-qr flowing popup transition hidden">
+	             <img th:src="@{/images/9.jpg}" src="../static/images/loginTX.png" alt="" class="ui rounded image" style="width: 130px">
+	         </div>
+	         <!--打赏博主-->
+	         <h4 class="ui horizontal divider header m-margin-top-large">打赏博主</h4>
+	         <div class="ui segment">
+	             <div class="ui two column grid">
+	                 <div class="column">
+	                     <!--微信打赏-->
+	                     <img th:src="@{/images/10.jpg}" alt="" class="ui rounded image" style="width: 100px">
+	                 </div>
+	                 <div class="right aligned column">
+	                     <!--支付宝打赏-->
+	                     <img th:src="@{/images/8.jpg}" alt="" class="ui rounded image" style="width: 100px">
+	                 </div>
+	             </div>
+	         </div>
+	         <!--友情链接-->
+	         <h4 class="ui horizontal divider header" >友情链接</h4>
+	         <div class="ui segments">
+                  <div class="ui  segment">
+                      <a href="#">等待开发</a>
+                  </div>
+                  <div class="ui segment">
+                          <a href="#">等待开发</a>
+                  </div>
+                  <div class="ui segment">
+                     <a href="#">等待开发</a>
+                  </div>
+             </div>
+	     </div>
+
+        </div>
+    </div>
+  </div>
+
+<!-- 妹子的body -->
+<div th:insert="_mz :: body"></div>
+<!--底部footer start-->
+<footer class="ui inverted vertical segment m-padded-tb-massive" th:replace="_fragments :: footer">
+</footer>
+<!--底部footer end-->
+<!-- 妹子的script -->
+<th:block th:insert="_mz :: script"></th:block>
+<!--引入jQuery-->
+<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<!-- 引入sementic-ui模板所需要的js -->
+<script th:src="@{/js/semantic.min.js}"></script>
+<!--引入canvas -->
+<th:block th:insert="_fragments ::  canvas"></th:block>
+<!--引入canvas -->
+<th:block th:insert="_fragments ::  canvas"></th:block>
+<script> 
+  $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+  });
+
+  $('.ui.dropdown').dropdown({
+      on: 'hover'
+  });
+
+  /*qq显示*/
+  $('.qq').popup();
+
+  /*微信添加*/
+  $('.wc').popup({
+      popup: $('.wc-qr'),
+      on: 'hover',
+      position: 'bottom center'
+  });
+  /*分页*/
+  function page(obj) {
+      $("[name='currentPage']").val($(obj).data("page"));
+      loaddata();
+  }
+  /*ajax请求*/
+  function loaddata() {
+      $("#table-container").load(/*[[@{/index.html}]]*/"/limitIndex", {
+    	  currentPage: $("[name='currentPage']").val()
+      });
+  }
+</script>
+</body>
+</html>

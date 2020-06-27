@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myh.mapper.CommentMapper">
+	<cache></cache>
+	<insert id="insertComment" parameterType="comment">
+		INSERT into t_comment
+		(avatar,content,create_time,email,name,blog_id,parent_conmment_id,admin_comment)
+		VALUES
+		(#{avatar},#{content},#{createTime},#{email},#{name},#{blog.id},#{parentConmment.id},#{adminComment})
+	</insert>
+	
+
+</mapper> 

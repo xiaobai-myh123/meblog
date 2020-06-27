@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myh.mapper.BlogMapper">
+	<cache></cache>
+	<resultMap type="blog" id="blogresultMap">
+		<result column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="first_picture" property="firstPicture" />
+		<result column="flag" property="flag" />
+		<result column="description" property="description" />
+		<result column="views" property="views" />
+		<result column="appreciation" property="appreciation" />
+		<result column="shar_statement" property="sharStatement" />
+		<result column="commentabled" property="commentabled" />
+		<result column="publicshed" property="publicshed" />
+		<result column="recommend" property="recommend" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="tag_ids" property="tagIds" />
+		<association property="type" javaType="Type">
+			<result column="type_id" property="id" />
+		</association>
+		<association property="user" javaType="User">
+			<result column="user_id" property="id" />
+		</association>
+	</resultMap>
+
+	<resultMap type="blog" id="blogLimitOne">
+		<result column="id" property="id"/>
+		<result column="title" property="title" />
+		<result column="publicshed" property="publicshed" />
+		<result column="recommend" property="recommend" />
+		<result column="update_time" property="updateTime" />
+		<association property="type" javaType="Type">
+			<result column="type_id" property="id" />
+			<result column="name" property="name" />
+		</association>
+	</resultMap>
+
+	<!-- 增加一个 -->
+	<insert id="addBlog">
+		insert into
+		t_blog(id,appreciation,commentabled,content,create_time,first_picture,flag,publicshed,recommend,shar_statement,title,update_time,views,type_id,user_id,tag_ids,description)
+		VALUES(
+		#{id},
+		#{appreciation},
+		#{commentabled},
+		#{content},
+		#{createTime},
+		#{firstPicture},
+		#{flag},
+		#{publicshed},
+		#{recommend},
+		#{sharStatement},
+		#{title},
+		#{updateTime},
+		#{views},
+		#{type.id},
+		#{user.id},
+		#{tagIds},
+		#{description}
+		)
+	</insert>
+
+	<!-- 修改一个 -->
+	<update id="updateBlogById" parameterType="blog">
+		update t_blog set  
+		appreciation=#{appreciation},
+		commentabled=#{commentabled},
+		content=#{content},
+		first_picture=#{firstPicture},
+		flag=#{flag},
+		publicshed=#{publicshed},
+		recommend=#{recommend},
+		shar_statement=#{sharStatement},
+		title=#{title},
+		update_time=#{updateTime},
+		type_id=#{type.id},
+		user_id=#{user.id},
+		tag_ids=#{tagIds},
+		description=#{description}
+		where id=#{id}
+	</update>
+	
+	<!-- 删除一个 -->
+	<delete id="delBlof" parameterType="long">
+		delete from t_blog where
+		id=#{id}
+	</delete>
+
+	<resultMap type="blog" id="blogresultMapAndUser">
+		<result column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="first_picture" property="firstPicture" />
+		<result column="flag" property="flag" />
+		<result column="description" property="description" />
+		<result column="views" property="views" />
+		<result column="appreciation" property="appreciation" />
+		<result column="shar_statement" property="sharStatement" />
+		<result column="commentabled" property="commentabled" />
+		<result column="publicshed" property="publicshed" />
+		<result column="recommend" property="recommend" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="tag_ids" property="tagIds" />
+		<association property="type" javaType="Type">
+			<result column="type_id" property="id" />
+		</association>
+		<association property="user" javaType="User">
+			<result column="uid" property="id" />
+			<result column="nickname" property="nickname" />
+			<result column="avatar" property="avatar" />
+		</association>
+	</resultMap>
+	<!-- 得到一个 -->
+	<select id="select" parameterType="long"
+		resultMap="blogresultMapAndUser">
+		select 
+		b.id,b.title,b.content,b.first_picture,
+		b.flag,b.description,b.views,b.appreciation,
+		b.shar_statement,b.commentabled,b.publicshed,
+		b.recommend,b.create_time,b.update_time,b.type_id,
+		b.tag_ids,u.id as uid,u.nickname,u.avatar
+		from t_blog b,t_user u 
+		where b.id=#{id}
+		and b.user_id=u.id
+	</select>
+
+	<!-- 得到所有 -->
+	<select id="selectBlogList" resultMap="blogresultMap">
+		select * from t_blog
+	</select>
+
+	<!-- 得到  分页 -->
+	<select id="selectBlogListLimit" resultMap="blogLimitOne">
+		select b.id,title,t.name,recommend,publicshed,update_time
+		from  t_blog b,t_type t 
+		where b.type_id=t.id 
+		ORDER BY update_time desc,b.id desc 
+		limit #{currentPageNo},#{pageSize}
+	</select>
+	
+	<!-- 得到  模糊 like 分页 -->
+	<select id="selectBlogListLimitLike" resultMap="blogLimitOne">
+		select b.id,title,t.name,recommend,publicshed,update_time,b.type_id
+		from  t_blog b,t_type t 
+		where b.type_id=t.id 
+		<if test="title!=null and title!=''">
+			and title LIKE CONCAT('%',#{title},'%') 
+		</if>
+		<if test="typeId!=null and typeId!=0">
+			and type_id=#{typeId} 
+		</if>
+		<if test="recommend!=null and recommend!=0">
+			and recommend=#{recommend}
+		</if>
+		<if test="publicshed!=null and publicshed!=0">
+			and publicshed=#{publicshed}
+		</if>
+		ORDER BY update_time desc,b.id desc 
+		limit #{currentPageNo},#{pageSize}
+	</select>
+	<!-- 计算博客数量  -->
+	<select id="countBlog" resultType="int">
+		select count(1) from t_blog 
+	</select>
+	
+	<!-- 计算博客数量  前台 -->
+	<select id="countBlogFrontDesk" resultType="int">
+		select count(1) from t_blog  where publicshed=1;
+	</select>
+	
+	<!-- 模糊查询 博客数量 -->
+	<select id="countBlogLike" resultType="int" parameterType="map">
+		select count(1) from t_blog
+		<where>
+			<if test="title!=null and title!=''">
+				and title LIKE CONCAT('%',#{title},'%') 
+			</if>
+			<if test="typeId!=null and typeId!=0">
+				and type_id=#{typeId} 
+			</if>
+			<if test="recommend!=null and recommend!=0">
+				and recommend=#{recommend}
+			</if>
+			<if test="publicshed!=null and publicshed!=0">
+				and publicshed=#{publicshed}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 分页查询 推荐博客 前台 -->
+		<!-- 得到  分页 -->
+	<select id="selectRecommend" resultMap="blogLimitOne">
+		select id,title,update_time,recommend 
+		from t_blog 
+		where recommend=1 
+		ORDER BY update_time desc,id desc 
+		LIMIT #{currentPageNo},#{pageSize}
+	</select>
+	
+	<resultMap type="com.myh.vo.VoBlog" id="VoBlogObj">
+		<result column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="description" property="description"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="views" property="views"/>
+		<result column="name" property="name"/>
+		<result column="tag_ids" property="tagIds"/>
+		<result column="first_picture" property="firstPicture"/>
+		<association property="user" javaType="User">
+			<result column="avatar" property="avatar"/>
+			<result column="nickname" property="nickname"/>
+		</association>
+		<association property="type" javaType="Type">
+			<result column="tid" property="id"/>
+			<result column="tname" property="name"/>
+		</association>
+	</resultMap>
+	
+	<!-- 前台显示 分页博客 -->
+	<select id="selectFrontDeskBlog" resultMap="VoBlogObj">
+		select b.id,b.description,b.update_time,b.views,t.`name`,title,first_picture,u.avatar,u.nickname,t.id tid,b.tag_ids,t.name tname
+		from t_blog b,t_type t,t_user u
+		where b.type_id=t.id and b.publicshed=1 and b.user_id=u.id
+		<if test="typeId!=null and typeId!=0">
+			and type_id=#{typeId} 
+		</if>   
+		ORDER BY update_time DESC,u.id DESC 
+		LIMIT #{currentPageNo},#{pageSize}
+	</select>
+		<!-- 前台显示 最受欢迎  根据view  浏览量 -->
+	<select id="selectMostPopularBlog" resultMap="VoBlogObj">
+		select b.id,b.update_time,b.views,title
+		from t_blog b,t_type t,t_user u
+		where b.type_id=t.id and b.publicshed=1 and b.user_id=u.id
+		ORDER BY views DESC,update_time DESC 
+		LIMIT 0,4
+	</select>
+	<!--根据分类id查博客数量-->
+	<select id="countBlogByType" parameterType="long" resultType="int">
+		SELECT COUNT(1) from t_blog where type_id=#{id}
+	</select>
+	
+		<!-- 前台显示 根据标签分页博客 -->
+	<select id="selectFBlogByTagId" resultMap="VoBlogObj">
+		select b.id,b.description,b.update_time,b.views,t.`name`,title,first_picture,u.avatar,u.nickname,t.id tid,b.tag_ids,t.name tname
+		from t_blog b,t_type t,t_user u
+		where b.type_id=t.id and b.publicshed=1 and b.user_id=u.id
+		and b.id in (SELECT blogs_id  from t_blog_tags where tags_id=#{tagId})
+		ORDER BY update_time DESC,u.id DESC 
+		LIMIT #{currentPageNo},#{pageSize}
+	</select>
+</mapper> 

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <!--移动端预览-->
+    <meta name="viewport" content="device-width, initial-scale=1.0">
+    <title th:replace="${title}">博客详情</title>
+    <!--引入semantic-ui框架-->
+    <link rel="stylesheet" th:href="@{/css/semantic.min.css}">
+    <!--引入页面排版CSS-->
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <!--引入动画插件CSS-->
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <!--引入代码高亮插件CSS-->
+    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+    <!--引入目录生成插件CSS-->
+    <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/lib/tocbot/tocbot.css}">
+    <!--引入自定义CSS-->
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <!--图标部署-->
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="bookmark" href="/favicon.ico" type="image/x-icon"/>
+    <!-- mz的css -->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/waifu.css}"/>
+</head>
+<body>
+<!--导航-->
+<nav th:fragment="menu(n)" class="ui inverted attached segment segment m-padded-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">Blog</h2>
+            <a href="#" th:href="@{/}" class="m-item item m-mobile-hide" th:classappend="${n==1}? 'active':''"><i class="small home icon"></i><span >首页</span></a>
+            <a href="#" th:href="@{/types/0}" class="m-item item m-mobile-hide" th:classappend="${n==2}? 'active':''"><i class="small idea icon"></i><span>分类</span></a>
+            <a href="#" th:href="@{/tags/0}" class="m-item item m-mobile-hide" th:classappend="${n==3}? 'active':''" ><i class="small tags icon" ></i><span >标签</span></a>
+            <a href="#" th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==4}? 'active':''" ><i class="small clone icon" ></i><span>归档</span></a>
+            <a href="#" th:href="@{/leaveMessage}" class="m-item item m-mobile-hide" th:classappend="${n==6}? 'active':''"><i class="small comment icon"></i><span>留言</span></a>
+            <a href="#" th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==5}? 'active':''"><i class="small info icon"></i><span>站长信息</span></a>
+            <div class="right m-item item m-mobile-hide">
+                <form name="search" action="" th:action="@{/search}" method="post">
+                    <div class="ui icon inverted  input">
+                        <input type="text" name="query" placeholder="Search.." th:value="${query}">
+                        <i onclick="document.forms['search'].submit()" class="search icon link"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--menu toggle无任何显示意思-->
+    <a href="#" class="ui icon menu toggle black button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+
+<!--底部footer-->
+<footer th:fragment="footer" class="ui inverted vertical segment m-padded-tb-massive ">
+    <div class="ui center aligned container ">
+        <div class="ui inverted divided stackable grid">
+            <div class="three wide column">
+                <div class="ui inverted link list">
+                    <h4 class="ui inverted header m-opacity-min">站长微信</h4>
+                    <div class="item">
+                        <img src="../static/images/WeChat.jpg" th:src="@{/images/6.jpg}" CLASS="ui rounded image" alt="" style="width:110px">
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-opacity-min">最受欢迎</h4> 
+                <div id="newblog-container">
+                    <div class="ui inverted link list" th:fragment="newblogList">
+                        <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" class="item" th:each="blog : ${newblogs}" th:text="${blog.title}">我在等你2019年</a>
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header m-opacity-min">联系作者</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">XXXXXXXX</a>
+                    <a href="#" class="item">XXXXXXXX</a>
+                    <a href="#" class="item">XXXXXXXX</a>
+                </div>
+
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header m-opacity-min">关于作者</h4>
+                <p class="m-text-thin m-text-spaced m-opacity-min m-text-lined">作者是一名小白，描述？不可能的这辈子的不会去描述的</p>
+                <!--后台管理员登录入口-->
+                <h4 class="ui inverted header m-opacity-min"><a class="item m-opacity-tiny" href="#" th:href="@{/admin}" style="color: #6577b9">后台管理</a></h4>
+            </div>
+        </div>
+        <!--分割线-->
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copy © 2020 - 2021 作者:小白</p>
+    </div>
+</footer>
+
+<!--所有需要引入的JS-->
+<!--引入jQuery-->
+<script>
+    $('#newblog-container').load(/*[[@{/footer/newblog}]]*/"/footer/newblog");
+</script>
+<th:block th:fragment="canvas">
+    <script>
+        !function(){
+            function n(n,e,t){
+                return n.getAttribute(e)||t
+            }
+            function e(n){
+                return document.getElementsByTagName(n)
+            }
+            function t(){
+                var t=e("script"),o=t.length,i=t[o-1];
+                return{l:o,z:n(i,"zIndex",-1),o:n(i,"opacity",.8),c:n(i,"color","255,105,180"),n:n(i,"count",400)}
+            }
+            function o(){
+                a=m.width=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth,
+                    c=m.height=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+            }
+            function i(){
+                r.clearRect(0,0,a,c);
+                var n,e,t,o,m,l;
+                s.forEach(function(i,x){
+                    for(i.x+=i.xa,i.y+=i.ya,i.xa*=i.x>a||i.x<0?-1:1,i.ya*=i.y>c||i.y<0?-1:1,r.fillRect(i.x-.5,i.y-.5,1,1),e=x+1;e<u.length;e++)n=u[e],
+                    null!==n.x&&null!==n.y&&(o=i.x-n.x,m=i.y-n.y,
+                        l=o*o+m*m,l<n.max&&(n===y&&l>=n.max/2&&(i.x-=.03*o,i.y-=.03*m),
+                        t=(n.max-l)/n.max,r.beginPath(),r.lineWidth=t/2,r.strokeStyle="rgba("+d.c+","+(t+.2)+")",r.moveTo(i.x,i.y),r.lineTo(n.x,n.y),r.stroke()))
+                }),
+                    x(i)
+            }
+            var a,c,u,m=document.createElement("canvas"),
+                d=t(),l="c_n"+d.l,r=m.getContext("2d"),
+                x=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
+                    function(n){
+                        window.setTimeout(n,1e3/45)
+                    },
+                w=Math.random,y={x:null,y:null,max:2e4};m.id=l,m.style.cssText="position:fixed;top:0;left:0;z-index:"+d.z+";opacity:"+d.o,e("body")[0].appendChild(m),o(),window.onresize=o,
+                window.onmousemove=function(n){
+                    n=n||window.event,y.x=n.clientX,y.y=n.clientY
+                },
+                window.onmouseout=function(){
+                    y.x=null,y.y=null
+                };
+            for(var s=[],f=0;d.n>f;f++){
+                var h=w()*a,g=w()*c,v=2*w()-1,p=2*w()-1;s.push({x:h,y:g,xa:v,ya:p,max:6e3})
+            }
+            u=s.concat([y]),
+                setTimeout(function(){i()},100)
+        }();
+    </script>
+</th:block>
+</body>
+</html>

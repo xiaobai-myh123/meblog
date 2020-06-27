@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myh.mapper.TypeMapper">
+	<cache></cache>
+	<!-- 增加一个type -->
+	<insert id="addTypeOne" parameterType="int">
+		INSERT
+		into t_type(name) VALUES(#{name})
+	</insert>
+
+	<!-- 删除一个 -->
+	<delete id="delTypeOne" parameterType="int">
+		delete from t_type where
+		id=#{id}
+	</delete>
+
+	<!-- update一个 -->
+	<update id="updateTypeOne">
+		update t_type set name=#{name} where id=#{id}
+	</update>
+
+	<!-- select一个 -->
+	<select id="selectTypeOne" resultType="type">
+		select * from t_type where
+		id=#{id}
+	</select>
+
+
+	<!-- select所有 -->
+	<select id="selectTypeList" resultType="type">
+		select  t.id,name from t_type t LEFT JOIN t_blog b on t.id=b.type_id GROUP BY t.id ORDER BY count(t.id) DESC,id desc
+	</select>
+
+	<!-- 判断是否存在分类 -->
+	<select id="selectTypeByTypeName" parameterType="string"
+		resultType="type">
+		select * from t_type where name=#{typeName}
+	</select>
+
+	<!-- 插入一个分类 -->
+	<!-- 判断是否存在分类 -->
+	<insert id="saveType" parameterType="string">
+		insert into t_type(name)
+		values(#{name})
+	</insert>
+
+	<!-- 分页查询- -->
+	<select id="selectTypeListLimit" resultType="type">
+		select * from t_type limit #{currentPageNo},#{pageSize}
+	</select>
+	
+	<!-- 计算中记录数- -->
+	<select id="countType" resultType="int">
+		select count(1) from t_type
+	</select>
+	
+	<!-- 前台显示分类对象 voType -->
+	<select id="selectVoTypeListLimit" resultType="com.myh.vo.VoType" parameterType="long">
+		select t.id,t.name,count(1) as count from  
+		t_blog b,t_type t 
+		where b.type_id =t.id 
+		GROUP BY t.id 
+		ORDER BY count desc,id desc 
+		LIMIT 0,#{count}	
+	</select>
+	
+	<resultMap type="com.myh.vo.VoType" id="VoTypeObje=">
+		<result column="tid" property="id"/>
+		<result column="name" property="name"/>
+		<result column="count" property="count"/>
+	</resultMap>
+	
+	<!-- 前台显示 在分类页面   分类对象 voType -->
+	<select id="countTypeByBlog" resultMap="VoTypeObje=">
+		select t.id tid,t.name,COUNT(b.id) as count from  
+		t_blog b RIGHT JOIN t_type t 
+		on b.type_id =t.id 
+		GROUP BY t.id 
+		ORDER BY count desc,tid DESC
+	</select>
+	
+	
+	
+</mapper>

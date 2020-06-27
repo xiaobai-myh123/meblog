@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="_fragments :: head(~{::title})">
+    <meta charset="UTF-8">
+    <!--移动端预览-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类页面</title>
+</head>
+
+<body>
+    <!--导航-->
+    <nav class="ui inverted attached segment segment m-padded-tb-mini m-shadow-small" th:replace="_fragments :: menu(2)">
+    </nav>
+     <!--导航 end-->
+ 	 <input type="hidden" name="currentPage" th:value="${currentPage}">
+ 	 <input type="hidden" name="avtiveTypeId" th:value="${avtiveTypeId}">
+    <!--中间内容 start-->
+    <div class="m-container-small m-padded-tb-big">
+        <!--适应移动端手机-->
+        <div class="ui container">
+            <!--header-->
+            <div class="ui top attached segment">
+                <div class="ui middle aligned two column grid">
+                    <div class="column">
+                        <h3 class="ui teal header">分类</h3>
+                    </div>
+                    <div class="right aligned column">
+                        共 <h2 class="ui orange header m-inline-blok m-text-thin" th:text="${#arrays.length(types)}">14</h2>个
+                        </div>
+                    </div>
+                </div>
+                <!--分类列表区域-->
+                <div class="ui attached segment m-padded-tb-large   ">
+                    <div class="ui labeled button m-margin-tb-tiny" th:each="type : ${types}">
+                        <a th:href="@{/types/}+${type.id}" href="#" class="ui basic button teal" th:classappend="${type.id==avtiveTypeId }? 'teal'" th:text="${type.name}">学习日志</a>
+                        <div class="ui basic left pointing label teal" th:classappend="${type.id==avtiveTypeId }? 'teal'"  th:text="${type.count}">
+                            12
+                        </div>
+                    </div>
+                </div>
+                <div id="table-container" th:fragment="indexList">
+                <!--博客列表-->
+	                <div class="ui top attached teal segment">
+	                    <div class="ui padded vertical segment m-padded-tb-large m-mobile-clear" th:each="blog : ${blogs}">
+	                        <!--mobile reversed反序-->
+	                        <div class="ui middle aligned grid mobile reversed stackable" >
+	                            <div class="eleven wide column">
+	                                <h3>
+	                                	<a href="#" th:href="@{/blog/{id}(id=${blog.id})}"  class="m-black" th:text="${blog.title}">庐山旅行记录-江西</a>
+	                                </h3>
+	                                <p class="m-text" th:text="|${blog.description}.....|">庐山，又名匡山、
+	                                    匡庐，位于江西省九江市庐山市境内。介于东经115°52′—116°8′，北纬29°26′—29°41′之间。东偎婺源、鄱阳湖，南靠滕王阁，西邻京九铁路大通脉，北枕滔滔长江。 </p>
+	                                <div class="ui grid">
+	                                    <div class="eleven wide column">
+	                                        <div class="ui mini horizontal link list">
+	                                            <div class="item">
+	                                                <img src="https://picsum.photos/id/1011/100/100" alt="" class="ui avatar image" th:src="@{${blog.user.avatar}}"  >
+	                                                <div class="content"> <a href="#" th:href="@{/about}" target="_blank" class="header" th:text="${blog.user.nickname}">叶仁平</a></div>
+	                                            </div>
+	                                            <div class="item">
+	                                                <i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2019-10-01</span>
+	                                            </div>
+	                                            <div class="item">
+	                                                <i class="eye icon"></i><span th:text="${blog.views}">7437</span>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                    <div class="five wide right aligned column">
+	                                        <a href="#"  th:href="@{/types/{id}(id=${blog.type.id})}"  class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">认知升级</a>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="five wide column">
+	                                <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+	                                    <img src="https://picsum.photos/id/1011/800/400" alt="" th:src="@{${blog.firstPicture}}" class="ui round image">
+	                                </a>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	           
+                <!--分页-->
+                <div class="ui bottom attached segment" th:if="${totalPages}>1">
+                    <div class="ui middle aligned two column grid">
+                       <div class="column">
+         		 		  <a href="#" onclick="page(this)" th:attr="data-page=${currentPage-1}"  th:if="${currentPage>1}" class="ui mini teal basic button">上一页</a>
+             		  </div>
+		              <div class="right aligned column">
+		 				  <a href="#" onclick="page(this)" th:attr="data-page=${currentPage+1}" th:if="${currentPage<totalPages}" class="ui mini teal basic button">下一页</a>
+		              </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    <!--中间内容 end-->
+<!-- 妹子的body -->
+<div th:insert="_mz :: body"></div> 
+<!--底部footer start-->
+<footer class="ui inverted vertical segment m-padded-tb-massive" th:replace="_fragments :: footer">
+</footer>
+<!--底部footer end-->
+</body>
+
+<!--引入jQuery-->
+<script src="../static/js/jquery-3.4.1.min.js" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script src="../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
+<!-- 妹子的script -->
+<th:block th:insert="_mz :: script"></th:block>
+<!--引入canvas -->
+<th:block th:insert="_fragments ::  canvas"></th:block>
+<script>
+    /*小屏幕 下拉的图标*/
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    /*分页*/
+    function page(obj) {
+        $("[name='currentPage']").val($(obj).data("page"));
+        loaddata();
+    }
+    /*ajax请求*/
+    function loaddata() {
+        $("#table-container").load("/types/limitIndex/", {
+      	  currentPage: $("[name='currentPage']").val(),
+      	  id: $("[name='avtiveTypeId']").val()
+        });
+    }
+</script>
+</html>
