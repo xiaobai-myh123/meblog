@@ -58,13 +58,15 @@ public class TagController {
 	// 提交表单新增标签
 	@PostMapping("/tags")
 	public String post(@Valid Tag tag, BindingResult result, RedirectAttributes attributes) {
+		//@Valid 如果有不符合的数据  直接抛出 
 		if (tag.getName() == null) {
 			attributes.addFlashAttribute("name", "分类名字不能为空");
 			return "admin/tags-input";
 		}
+		System.out.println(1);
 		Tag tag1 = tagServiceImpl.selectTagByTagName(tag.getName());
 		if (tag1 != null) {
-			result.rejectValue("name", "nameError", "1不能添加重复的标签");
+			result.rejectValue("name", "nameError", "不能添加重复的标签");
 		}
 		if (result.hasErrors()) {
 			return "admin/tags-input";
@@ -94,7 +96,7 @@ public class TagController {
 		}
 		Tag tag1 = tagServiceImpl.selectTagByTagName(tag.getName());
 		if (tag1 != null) {
-			result.rejectValue("name", "nameError", "2不能添加重复的标签");
+			result.rejectValue("name", "nameError", "不能修改重复的标签");
 		}
 		if (result.hasErrors()) {
 			return "admin/tags-input";

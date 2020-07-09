@@ -22,12 +22,17 @@ import com.myh.service.TypeService;
 import com.myh.service.impl.BlogServiceImpl;
 import com.myh.service.impl.TagServiceImpl;
 import com.myh.utils.IdWorker;
-import com.myh.utils.MarkdownUtils;
 import com.myh.utils.MyUtils;
 import com.myh.utils.PageSupport;
 import com.myh.utils.SystemConstant;
 import com.myh.vo.BlogQuery;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags = "后台-博客的数据接口")
 @Controller
 @RequestMapping("/admin")
 @Transactional
@@ -41,6 +46,11 @@ public class BlogController {
 	private TagServiceImpl tagService;
 	
 	//去blog管理博客页面
+	@ApiOperation(value = "去blog管理博客页面",notes = "根据页数查看当前页的博客")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "path",name = "currentPage",value = "当前页数",required = false),
+		@ApiImplicitParam(name = "model",value = "转发的Model",required = false)
+	})
 	@GetMapping("/blogs")
 	public String blogs(
 			@PathVariable(value = "currentPage", required = false) String currentPage, 
@@ -67,6 +77,13 @@ public class BlogController {
 		return "admin/blogs";
 	}
 	//分页博客查询
+	@ApiOperation(value = "去blog管理博客页面",notes = "分页博客查询")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "id",value = "用户id",defaultValue = "00"),
+			@ApiImplicitParam(name = "currentPage",value = "当前页数",required = false),
+			@ApiImplicitParam(name = "blog",value = "BlogQuery根据博客的信息查询博客",required = true),
+			@ApiImplicitParam(name = "model",value = "转发的Model",required = false)
+			})
 	@PostMapping("/blogs/search")
 	public String blogsSearch(
 			String currentPage, 
@@ -107,6 +124,8 @@ public class BlogController {
 		return "admin/blogs::blogList";//返回片段
 	}
 	//去博客新增页面
+	@ApiOperation(value = "去博客新增页面",notes = "去博客新增页面")
+	@ApiImplicitParam(name = "model",value = "转发的Model",required = false)
 	@GetMapping("/blogs/input") 
 	public String input(Model model) {
 		model.addAttribute("blog", new Blog());
@@ -116,6 +135,14 @@ public class BlogController {
 	}
 	
 	//新增博客或者 修改博客   
+	@ApiOperation(value = "新增博客或者 修改博客",notes = "根据id修改博客或者直接增加博客")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "id",value = "用户id",defaultValue = "00"),
+		@ApiImplicitParam(name = "session",value = "HttpSession",required = false),
+		@ApiImplicitParam(name = "blog",value = "Blog blog的信息",required = true),
+		@ApiImplicitParam(name = "attributes",value = "RedirectAttributes重定向的类",required = false),
+		@ApiImplicitParam(name = "model",value = "转发的Model",required = false)
+		})
 	@PostMapping("/addBlogs")
 	public String post(
 			HttpSession session,
@@ -154,7 +181,12 @@ public class BlogController {
 		return "redirect:/admin/blogs";
 		
 	}
-	//修修改页面
+	//去修改
+	@ApiOperation(value = "去修改博客页面",notes = "根据博客id查询博客")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "id",value = "博客id",required = false,defaultValue = "00"),
+		@ApiImplicitParam(name = "model",value = "转发的Model",required = false)
+		})
 	@GetMapping("/blogs/{id}/input") 
 	public String editInput(@PathVariable("id") Long id,Model model) {
 		Blog blog = blogService.select(id);
@@ -167,6 +199,11 @@ public class BlogController {
 		return "admin/blogs-input";
 	}
 	//删除博客
+	@ApiOperation(value = "删除博客",notes = "根据博客id删除博客")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "id",value = "博客id",required = false,defaultValue = "00"),
+		@ApiImplicitParam(name = "model",value = "转发的Model",required = false)
+		})
 	@GetMapping("/blogs/{id}/delete") 
 	public String delete(
 			@PathVariable("id") Long id,

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,11 +20,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor	
 @NoArgsConstructor
+@ApiModel("标签实体类")
 public class Tag implements Serializable{
 	
+	@ApiModelProperty(value = "标签的id",example = "0")
 	private Long id;
+	@ApiModelProperty(value = "标签的名字")
+	@NotBlank(message = "标签不能空>后端")
 	private String name;
-	
-	
 	private List<Blog> blogs=new ArrayList<Blog>();
 }
