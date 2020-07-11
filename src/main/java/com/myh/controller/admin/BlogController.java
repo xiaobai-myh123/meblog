@@ -77,7 +77,7 @@ public class BlogController {
 		return "admin/blogs";
 	}
 	//分页博客查询
-	@ApiOperation(value = "去blog管理博客页面",notes = "分页博客查询")
+	@ApiOperation(value = "去blog管理博客页面",notes = "根据条件分页博客查询")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id",value = "用户id",defaultValue = "00"),
 			@ApiImplicitParam(name = "currentPage",value = "当前页数",required = false),

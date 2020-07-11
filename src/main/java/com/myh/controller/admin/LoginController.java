@@ -14,6 +14,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.myh.pojo.User;
 import com.myh.service.impl.UserServiceImpl;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags = "后台-登录数据接口")
 @Controller 
 @RequestMapping("/admin")
 @Transactional
@@ -25,7 +31,7 @@ public class LoginController {
 	   *      去登录页面
 	 * @return
 	 */
-	
+	@ApiOperation(value = "去登录页面",notes = "去登录页面")
 	@RequestMapping(method = RequestMethod.GET,value = {"/","/login.html","/login"})
 	public String loginPage() {
 		return "admin/login";
@@ -38,6 +44,11 @@ public class LoginController {
 	 * @param attributes
 	 * @return
 	 */
+	@ApiOperation(value = "登录页面判断",notes = "根据用户名和密码判断是否登录成功")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "Param",name = "username",value = "用户名",required = true),
+		@ApiImplicitParam(paramType = "Param",name = "password",value = "用户密码",required = true)
+	})
 	@RequestMapping(method = RequestMethod.POST,value = "/login")
 	public String loging(
 			@RequestParam(value = "username")String username,
@@ -62,6 +73,7 @@ public class LoginController {
 	 * @param session
 	 * @return
 	 */
+	@ApiOperation(value = "退出登录",notes = "退出方法")
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("user");

@@ -20,13 +20,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor	
 @NoArgsConstructor
-@ApiModel("标签实体类")
+@ApiModel(value = "标签实体类",description = "标签信息描述类")
 public class Tag implements Serializable{
 	
 	@ApiModelProperty(value = "标签的id",example = "0")
 	private Long id;
+	
 	@ApiModelProperty(value = "标签的名字")
 	@NotBlank(message = "标签不能空>后端")
 	private String name;
+	
 	private List<Blog> blogs=new ArrayList<Blog>();
 }
