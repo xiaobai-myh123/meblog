@@ -1,4 +1,4 @@
-package com.myh.controller.admin;
+﻿package com.myh.controller.admin;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,12 +15,12 @@ import com.myh.pojo.User;
 import com.myh.service.impl.UserServiceImpl;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @Api(tags = "后台-登录数据接口")
 @Controller 
+@Api(tags = "后台-登录接口")
 @RequestMapping("/admin")
 @Transactional
 public class LoginController {
