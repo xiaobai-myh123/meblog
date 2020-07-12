@@ -62,6 +62,7 @@
 		class="m-container-small m-padded-tb-big animated fadeIn">
 		<div class="ui container">
 			<!--提交留言表单-->
+			 <input type="hidden" name="parentConmmentId" value="-1" readonly="readonly">
 			<div id="comment-form" class="ui form">
 				<div class="field">
 					<textarea name="content" rows="3" placeholder="请输入评论信息"></textarea>
@@ -70,7 +71,7 @@
 					<div class="field m-mobile-wide m-margin-bottom-small">
 						<div class="ui left icon input">
 							<i class="user icon"></i> <input name="nickname" type="text"
-								placeholder="姓名" value="游客">
+								placeholder="昵称" >
 						</div>
 					</div>
 					<div class="field m-mobile-wide m-margin-bottom-small">
@@ -90,6 +91,7 @@
 				<!--错误提示-->
 				<div class="ui error message"></div>
 			</div>
+			<!--提交留言表单-->
 			<!-- 网页留言 -->
 			<div id="conmment-container" class="ui bottom attached segment">
 				<!--留言区域列表-->
@@ -97,7 +99,7 @@
 					<div th:fragment="leaveCommentsList">
 						<div class="ui threaded comments" style="max-width: 100%">
 							<h3 class="ui dividing header">留言</h3>
-							<div class="comment" th:each="lm:${leaveComments}">
+							<div class="comment" th:each="lm:${leaveComments}"  th:if="${#arrays.length(leaveComments)}>0">
 								<a class="avatar"> <img th:src="@{${lm.avatar}}">
 								</a>
 								<div class="content">
@@ -110,20 +112,45 @@
 									</div>
 									<div class="text" th:text="${lm.content}">你的博客真棒！</div>
 									<div class="actions">
-										<a></a>
+										<a class="回复" th:attr="data-commentid=${lm.id},data-commentnickname=${lm.name}" data-commentid="1" data-commentnickname="Matt"  onclick="reply(this)">回复</a>
+                                    	<a style="display: none;" onclick="cancelReply(this)" class="meHide">取消</a>
 									</div>
 								</div>
+							     <!--判断是否有子集回复-->
+                                <div class="comments" th:if="${#arrays.length(lm.replyComments)}>0">                           
+                              		  <div class="comment" th:each="childLm : ${lm.replyComments}">
+                                       <a class="avatar"><img th:src="@{${childLm.avatar}}"></a>
+                                        <div class="content">
+                                            <a class="author" >
+                                               <span th:text="${childLm.name}">小白</span>&nbsp;
+                                              	<div th:if="${childLm.adminComment}" class="ui mini basic teal left pointing label m-padded-mini">博主</div>
+                                                <span th:text="' @' + ${childLm.parentConmment.name}" class="m-teal">@ 小红</span>
+                                                <div th:if="${childLm.adminComment}" class="ui mini basic teal left pointing label m-padded-mini">博主</div>
+                                            </a>
+                                            <div class="metadata"> 
+                                             	 <span th:text="${#dates.format(childLm.createTime,'yyyy-MM-dd HH:mm')}" class="date" >Today at 5:42PM</span>
+                                            </div>
+                                            <div th:text="${childLm.content}" class="text" > 你好呀</div>
+                                            <div class="actions">
+                                                 <a class="回复"  th:attr="data-commentid=${childLm.id},data-commentnickname=${childLm.name}" data-commentid="1" data-commentnickname="Matt"  onclick="reply(this)">回复</a>
+                                   			  <a style="display: none;" onclick="cancelReply(this)" class="meHide">取消</a>
+                                            </div>
+                                       </div>
+                                   </div>
+                                </div>
+                                </div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- 网页留言 -->
 		</div>
-	</div>
-	<!-- 网页留言 -->
+	<!--中间内容 start-->
+	
+	
+	
 	<!--底部footer start-->
-
-
 
 	<footer class="ui inverted vertical segment m-padded-tb-massive"
 		th:replace="_fragments :: footer">
@@ -484,6 +511,7 @@
 
 	function postData() {
 		$("#comment-container").load("[[@{/postGetLeaveComment}]]", {
+			"parentConmmentId" : $("[name='parentConmmentId']").val(),
 			"name" : $("[name='nickname']").val(),
 			"email" : $("[name='email']").val(),
 			"content" : $("[name='content']").val()
@@ -496,6 +524,7 @@
 	}
 
 	function clearContent() {
+		$("[name='parentConmmentId']").val('-1');
 		$("[name='content']").val('');
 		$("[name='content']").attr("placeholder", "请输入评论信息...");
 	}
@@ -504,5 +533,23 @@
 	$("[name='content']").blur(function() {
 		$("[name='content']").attr("placeholder", "请输入评论信息");
 	})
+	//回复
+	function reply(obj) {
+		$(".meHide").hide();
+	    var commentId = $(obj).data('commentid');
+	    var commentNickname = $(obj).data('commentnickname');
+	    $("[name='content']").attr("placeholder","@"+commentNickname).focus();
+	    $("[name='parentConmmentId']").val(commentId)
+	    //滚动到指定位置
+	    $(window).scrollTo($('#comment-form'),500);
+	    //显示取消
+	    $(obj).next().show();
+	}
+	//取消回复
+	function cancelReply(obj) {
+		$(obj).hide();
+		$("[name='parentConmmentId']").val('-1');
+		$("[name='content']").attr("placeholder","请输入评论信息...");
+	}
 </script>
 </html>

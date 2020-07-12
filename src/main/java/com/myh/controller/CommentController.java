@@ -1,5 +1,6 @@
 package com.myh.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -75,7 +76,7 @@ public class CommentController {
 		Long blogId = comment.getBlog().getId();
 		int num = commentServiceImpl.insertComment(comment);
 		if(num<=0) {
-			logger.info("error", "留言失败"+comment.getBlog().getId()+" "+comment);
+			logger.info("error", "留言失败"+comment.getBlog().getId()+" "+comment+new Date());
 		}
 		return "redirect:/comments/" +blogId;
 	}

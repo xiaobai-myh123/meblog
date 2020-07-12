@@ -2,6 +2,9 @@ package com.myh.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
 import com.myh.pojo.LeaveComments;
 
 /*
@@ -13,5 +16,15 @@ import com.myh.pojo.LeaveComments;
 public interface LeaveCommentsService {
 
 	public int insertLeaveCommen(LeaveComments leaveComments);
+	//一级评论
 	public List<LeaveComments> getListLeaveComments();
+	
+	//二级评论
+	public List<LeaveComments> getListLeaveCommentsNot();
+	
+	//根据父评论查找评论
+	public List<LeaveComments> geteaveCommentsByPid(Long pid);
+	
+	//根据父评论id返回父评论
+	public LeaveComments geteaveCommentsById(Long pid);
 }

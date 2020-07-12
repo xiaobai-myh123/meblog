@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myh.mapper.BlogMapper">
-	<cache></cache>
+	<cache flushInterval="60000" eviction="LRU" readOnly="true"></cache>
 	<resultMap type="blog" id="blogresultMap">
 		<result column="id" property="id" />
 		<result column="title" property="title" />
@@ -118,7 +118,7 @@
 	</resultMap>
 	<!-- 得到一个 -->
 	<select id="select" parameterType="long"
-		resultMap="blogresultMapAndUser">
+		resultMap="blogresultMapAndUser" >
 		select 
 		b.id,b.title,b.content,b.first_picture,
 		b.flag,b.description,b.views,b.appreciation,
@@ -255,4 +255,5 @@
 		ORDER BY update_time DESC,u.id DESC 
 		LIMIT #{currentPageNo},#{pageSize}
 	</select>
+	
 </mapper> 
