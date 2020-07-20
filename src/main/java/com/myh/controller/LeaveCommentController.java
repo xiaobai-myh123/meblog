@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.myh.pojo.LeaveComments;
 import com.myh.pojo.User;
@@ -43,7 +42,6 @@ public class LeaveCommentController {
 		model.addAttribute("leaveComments", leaveCommentsServiceImpl.getListLeaveComments());
 		//最受欢迎
 		model.addAttribute("newblogs", blogServiceImpl.selectMostPopularBlog());
-		System.out.println(leaveCommentsServiceImpl.getListLeaveComments());
 		return "leaveComments";
 	} 
 	
@@ -68,11 +66,10 @@ public class LeaveCommentController {
 			leaveComments.setAvatar("/images/xiaolian.jpg");
 			leaveComments.setAdminComment(false);
 		}
-		System.out.println(leaveComments);
 		int count = leaveCommentsServiceImpl.insertLeaveCommen(leaveComments);
 		if(count<=0) {
 			Date date = new Date();
-			logger.info("error", "留言失败"+leaveComments);
+			logger.info("error", "留言失败"+leaveComments+new Date());
 		}
 		return "redirect:/leaveMessageAjax";
 	}

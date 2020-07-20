@@ -32,19 +32,31 @@ public class CommentServiceImpl implements CommentService{
 
 	@Override
 	public List<Comment> getCommentById(Long blogId) {
-		List<Comment> list = commentMapper.getCommentById(blogId);
-		List<Comment> listNot = commentMapper.getCommentByIdNot(blogId);
+		List<Comment> list = commentMapper.getCommentById(blogId);// 父级
+		List<Comment> listNot = commentMapper.getCommentByIdNot(blogId);// 非父级
 		for (int i = 0; i < listNot.size(); i++) {
 			Long pid = listNot.get(i).getParentConmmentId();
 			List<Comment> commentChild = getCommentByIdAndByPId(blogId, pid);
 			for (int j = 0; j < list.size(); j++) {
-				if(list.get(j).getId()==pid) {
-					list.get(j).setReplyComments(commentChild);
+				if (list.get(j).getId() == pid) { 
+					list.get(j).setReplyComments(commentChild);//注入子集
+				} else {
+					for (int k = 0; k < list.get(j).getReplyComments().size(); k++) {
+						// 追加子集评论 父级不是第一级的
+						if (list.get(j).getReplyComments().get(k).getId() == pid) {
+							list.get(j).getReplyComments().addAll(commentChild);
+						}
+					}
+				}
+				for (int k = 0; k < list.get(j).getReplyComments().size(); k++) {
+					long id = list.get(j).getReplyComments().get(k).getParentConmmentId();
+					System.out.println("id=" + id);
+					Comment comment = commentMapper.getCommentByPid(id);// 注入二级评论的父评论
+					list.get(j).getReplyComments().get(k).setParentConmment(comment);
 				}
 			}
-			
+
 		}
-//		list.forEach(System.out::println);
 		return list;
 	}
 

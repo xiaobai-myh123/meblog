@@ -21,6 +21,12 @@ import com.myh.service.impl.BlogServiceImpl;
 import com.myh.utils.PageSupport;
 import com.myh.utils.SystemConstant;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags = "后台-标签的数据接口")
 @Controller
 @RequestMapping("/admin")
 @Transactional
@@ -30,7 +36,12 @@ public class TagController {
 	private TagService tagServiceImpl;
 	@Autowired
 	private BlogServiceImpl blogService;
-	//去标签修改页面
+	//去标签页面
+	
+	@ApiOperation(value = "去标签页面",notes = "根据页数查询标签")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "path",name = "currentPage",value = "当前页数",required = false),
+	})
     @GetMapping(value = {"/tags","/tags/{currentPage}"})
     public String getTagPage(@PathVariable(value = "currentPage", required = false) String currentPage, Model model) {
     	if (currentPage == null) {
@@ -49,6 +60,7 @@ public class TagController {
     }
 
     //去新增标签页面
+	@ApiOperation(value = "去新增标签页面",notes = "去新增标签页面")
     @GetMapping("/tags/input")
     public String showInput(Model model){
         model.addAttribute("tag",new Tag());
@@ -56,6 +68,10 @@ public class TagController {
     }
     
 	// 提交表单新增标签
+	@ApiOperation(value = "提交表单新增标签",notes = "新增标签")
+	@ApiImplicitParams({
+		@ApiImplicitParam(paramType = "Valid",name = "Tag",value = "tag",required = true),
+	})
 	@PostMapping("/tags")
 	public String post(@Valid Tag tag, BindingResult result, RedirectAttributes attributes) {
 		//@Valid 如果有不符合的数据  直接抛出 
@@ -63,10 +79,10 @@ public class TagController {
 			attributes.addFlashAttribute("name", "分类名字不能为空");
 			return "admin/tags-input";
 		}
-		System.out.println(1);
+//		System.out.println(1);
 		Tag tag1 = tagServiceImpl.selectTagByTagName(tag.getName());
 		if (tag1 != null) {
-			result.rejectValue("name", "nameError", "不能添加重复的标签");
+			result.rejectValue("name", "nameError", "不能添加重复的标签");//手动添加错误
 		}
 		if (result.hasErrors()) {
 			return "admin/tags-input";
@@ -80,6 +96,10 @@ public class TagController {
 		return "redirect:/admin/tags";
 	}
 	//去增加标签页面
+	@ApiOperation(value = "根据id查询标签然后去修改标签",notes = "根据id查询标")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "id",value = "标签id"),
+		})
     @GetMapping("/tags/{id}/input")
     public String editInput(@PathVariable("id") Integer id, Model model){
         model.addAttribute("tag",tagServiceImpl.selectTagOne(id));
@@ -88,10 +108,14 @@ public class TagController {
 
 	// 提交 表单修改
 	@PostMapping("/tags/{id}")
+	@ApiOperation(value = "修改标签",notes = "根据id修改标签")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "Tag",value = "tag"),
+		})
 	public String editPost(@Valid Tag tag, BindingResult result, @PathVariable("id") Integer id,
 			RedirectAttributes attributes) {
 		if (tag.getName() == null) {
-			attributes.addFlashAttribute("message", "分类名字不能为空");
+			attributes.addFlashAttribute("message", "标签名字不能为空");
 			return "admin/tags-input";
 		}
 		Tag tag1 = tagServiceImpl.selectTagByTagName(tag.getName());
@@ -111,6 +135,10 @@ public class TagController {
 	}
 	
 	//删除标签
+	@ApiOperation(value = "删除标签",notes = "根据id删除标签")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "id",value = "id"),
+		})
 	@GetMapping("/tags/{id}/delete")
 	public String deleteById(@PathVariable("id") long id, RedirectAttributes attributes) {
 		int countBlogByTagId = tagServiceImpl.countBlogByTagId(Integer.parseInt(id+""));

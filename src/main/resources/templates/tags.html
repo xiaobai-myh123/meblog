@@ -62,7 +62,7 @@
              <input type="hidden" name="avtiveTypeId" th:value="${avtiveTypeId}">
             <!--分类列表区域-->
             <div class="ui attached segment m-padded-tb-large   ">
-                <a href="#" th:href="@{/tags/{id}(id=${tag.id})}"  th:classappend="${tag.id==avtiveTagId }? 'teal'"  class="ui  basic center pointing large label " th:each="tag : ${tags}">
+                <a href="#" th:href="@{/tags/{id}(id=${tag.id})}"  th:classappend="${tag.id==avtiveTypeId}?'teal'"  class="ui  basic center pointing large label" th:each="tag : ${tags}">
                     <span th:text="${tag.name}">JavaEE</span>
                     <div class="detail" th:text="${tag.count}">23</div>
                 </a>

@@ -36,9 +36,9 @@
             <a href="#" th:href="@{/leaveMessage}" class="m-item item m-mobile-hide" th:classappend="${n==6}? 'active':''"><i class="small comment icon"></i><span>留言</span></a>
             <a href="#" th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==5}? 'active':''"><i class="small info icon"></i><span>站长信息</span></a>
             <div class="right m-item item m-mobile-hide">
-                <form name="search" action="" th:action="@{/search}" method="post">
+                <form name="search" action="" th:action="@{/search}" method="get">
                     <div class="ui icon inverted  input">
-                        <input type="text" name="query" placeholder="Search.." th:value="${query}">
+                        <input type="text" name="keyword" placeholder="Search.." th:value="${keyword}">
                         <i onclick="document.forms['search'].submit()" class="search icon link"></i>
                     </div>
                 </form>
@@ -147,5 +147,7 @@
         }();
     </script>
 </th:block>
+
+
 </body>
 </html>

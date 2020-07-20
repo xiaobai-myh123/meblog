@@ -8,20 +8,41 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.0.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
-	</parent> 
+	</parent>
 	<groupId>com.myh</groupId>
 	<artifactId>meblog2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>meblog2</name> 
+	<name>meblog2</name>
 	<description>meblog2</description>
 
 	<properties>
 		<java.version>1.8</java.version>
-		 <skipTests>true</skipTests>
+		<!-- 打包跳过测试 -->
+		<skipTests>true</skipTests>
+		<!-- es版本 -->
+		<elasticsearch.version>7.6.1</elasticsearch.version>
 	</properties>
 
 	<dependencies>
-
+		<!-- 整合reids -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+	
+		<!-- json转化 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.62</version>
+		</dependency>
+		
+		<!-- es包 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+		</dependency>
+		
 		<!-- spring-boot 整合 mybatis -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -36,7 +57,6 @@
 			<artifactId>druid</artifactId>
 			<version>1.1.20</version>
 		</dependency>
-		
 		<!--引入Markdown转HTML的插件 -->
 		<dependency>
 			<groupId>com.atlassian.commonmark</groupId>
@@ -55,7 +75,6 @@
 			<artifactId>commonmark-ext-gfm-tables</artifactId>
 			<version>0.10.0</version>
 		</dependency>
-
 		<!--引入HTML的插件 转文本 -->
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -111,21 +130,21 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- swagge2 -->
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.9.2</version>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
 		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger-ui</artifactId>
-		    <version>2.9.2</version>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

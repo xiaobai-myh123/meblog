@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myh.mapper.BlogMapper;
 import com.myh.mapper.TagMapper;
 import com.myh.pojo.Blog;
+import com.myh.pojo.ESBlog;
 import com.myh.pojo.Tag;
 import com.myh.service.BlogService;
 import com.myh.utils.MarkdownUtils;
@@ -35,6 +36,7 @@ public class BlogServiceImpl implements BlogService{
 	@Autowired
 	private TagMapper tagMapper;
 	
+	//增加一个博客  还有增加一个es博客对象
 	@Override
 	public int addBlog(Blog blog) {
 		blog.setCreateTime(new Date());
@@ -185,5 +187,10 @@ public class BlogServiceImpl implements BlogService{
 	@Override
 	public int addViewById(Long id) {
 		return blogMapper.addViewById(id);
+	}
+
+	@Override
+	public List<ESBlog> getListEsBlog() {
+		return blogMapper.getListEsBlog();
 	}
 }

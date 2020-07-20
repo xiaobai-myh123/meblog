@@ -1,7 +1,9 @@
 package com.myh.pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -43,4 +45,9 @@ public class LeaveComments implements Serializable{
 	private String name;
 	@ApiModelProperty(value = "留言的email")
 	private String  email;
+	
+	//自己关联
+	private List<LeaveComments> replyComments=new ArrayList<LeaveComments>();//子评论
+	private LeaveComments parentConmment;//父评论
+	private Long parentConmmentId;
 }

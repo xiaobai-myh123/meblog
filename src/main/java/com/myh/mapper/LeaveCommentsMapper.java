@@ -9,8 +9,11 @@ package com.myh.mapper;
 
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.myh.pojo.LeaveComments;
@@ -20,9 +23,24 @@ import com.myh.pojo.LeaveComments;
 //@CacheNamespace
 public interface LeaveCommentsMapper {
 	
-	@Insert("INSERT into t_leave_comments(admin_comment,avatar,content,create_time,name,email) values(#{adminComment},#{avatar},#{content},#{createTime},#{name},#{email})")
+	@Insert("INSERT into t_leave_comments(admin_comment,avatar,content,create_time,name,email,parent_conmment_id) values(#{adminComment},#{avatar},#{content},#{createTime},#{name},#{email},#{parentConmmentId})")
 	public int insertLeaveCommen(LeaveComments leaveComments);
 	
-	@Select("select * from t_leave_comments")
+	//一级评论
+	@Select("select * from t_leave_comments WHERE parent_conmment_id=-1")
 	public List<LeaveComments> getListLeaveComments();
+	
+	//二级评论
+	@Select("select * from t_leave_comments WHERE parent_conmment_id!=-1")
+	public List<LeaveComments> getListLeaveCommentsNot();
+	
+	//根据父评论查找评论
+	@Select("select * from t_leave_comments WHERE parent_conmment_id=#{pid}")
+	public List<LeaveComments> geteaveCommentsByPid(@Param("pid") Long pid);
+	
+	//根据父评论id返回父评论
+	@Select("select * from t_leave_comments WHERE id=#{pid}")
+	public LeaveComments geteaveCommentsById(@Param("pid") Long pid);
+	
+	
 }
