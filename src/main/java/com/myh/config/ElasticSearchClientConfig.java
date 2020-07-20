@@ -19,7 +19,7 @@ public class ElasticSearchClientConfig {
 	@Bean("restHighLevelClient") //id 等于方法名  class 等于返回值
 	public RestHighLevelClient restHighLevelClient() {
 		// 默认为localhst:8080
-		RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("111.229.248.46",9200,"http")));
+		RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("127.0.0.1",9200,"http")));
 		return client;
 	}
 }
