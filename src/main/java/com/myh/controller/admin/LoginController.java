@@ -1,4 +1,4 @@
-﻿package com.myh.controller.admin;
+package com.myh.controller.admin;
 
 import javax.servlet.http.HttpSession;
 

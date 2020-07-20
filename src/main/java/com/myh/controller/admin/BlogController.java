@@ -175,10 +175,13 @@ public class BlogController {
 				//添加es博客对象
 				int savedocumentById = esServiceImpl.savedocumentById(nextId);
 				if(savedocumentById>0) {
-					System.out.println("es保存信息成功"+savedocumentById);
+					logger.info("es保存信息成功"+savedocumentById+" time:"+new Date());
 				}else {
+					logger.info("==========");
 					logger.info("es修改数据发生异常"+new Date()+blog.getId());
+					logger.info("==========");
 					throw new RuntimeException("es保存信息成功");
+					
 				}
 			}else {
 				attributes.addFlashAttribute("message", "添加博客失败");
@@ -192,7 +195,9 @@ public class BlogController {
 				//如果修改博客信息成功  同时修改es数据
 				int esUpdatedocumentById = esServiceImpl.updatedocumentById(blog.getId());
 				if(esUpdatedocumentById>0) {
-//					System.out.println("es修改信息成功"+esUpdatedocumentById);
+					logger.info("==========");
+					logger.info("es修改信息成功"+esUpdatedocumentById+" time:"+new Date());
+					logger.info("==========");
 				}else {
 					logger.info("es修改数据发生异常"+new Date()+blog.getId());
 					throw new RuntimeException("es修改数据发生异常");
@@ -239,7 +244,8 @@ public class BlogController {
 			//删除es
 			int deldocumentById = esServiceImpl.deldocumentById(id);
 			if(deldocumentById>0) {
-				System.out.println("删除es博客对象成功"+deldocumentById);
+//				System.out.println("删除es博客对象成功"+deldocumentById);
+				logger.info("删除es博客对象成功"+deldocumentById);
 			}else {
 				logger.info("es修改数据发生异常"+new Date()+id);
 				throw new RuntimeException("es修改数据发生异常");

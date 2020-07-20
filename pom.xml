@@ -24,6 +24,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- 整合reids -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+	
 		<!-- json转化 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>

@@ -82,7 +82,7 @@ public class EsServiceImpl implements EsService {
 				// 创建索引 然后插入数据
 				initEsData(indexName);
 			} catch (IOException e) {
-				logger.info("创建索引异常" + new Date());
+				logger.info("创建索引异常" + new Date()+"或者服务es服务没有开启");
 				e.printStackTrace();
 			}
 		}
