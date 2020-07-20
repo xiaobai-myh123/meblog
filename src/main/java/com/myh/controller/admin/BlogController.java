@@ -1,10 +1,13 @@
 package com.myh.controller.admin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import com.myh.pojo.Type;
 import com.myh.pojo.User;
 import com.myh.service.TypeService;
 import com.myh.service.impl.BlogServiceImpl;
+import com.myh.service.impl.EsServiceImpl;
 import com.myh.service.impl.TagServiceImpl;
 import com.myh.utils.IdWorker;
 import com.myh.utils.MyUtils;
@@ -31,6 +35,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import sun.util.logging.resources.logging;
 
 @Api(tags = "后台-博客的数据接口")
 @Controller
@@ -44,7 +49,9 @@ public class BlogController {
 	private TypeService typeService;
 	@Autowired
 	private TagServiceImpl tagService;
-	
+	@Autowired
+	private EsServiceImpl esServiceImpl;
+	private final Logger logger=LoggerFactory.getLogger(this.getClass());
 	//去blog管理博客页面
 	@ApiOperation(value = "去blog管理博客页面",notes = "根据页数查看当前页的博客")
 	@ApiImplicitParams({
@@ -65,7 +72,7 @@ public class BlogController {
 		List<Blog> blogs = 
 				blogService.selectBlogListLimit((_currentPage-1)*SystemConstant.NUMBER_OF_PAGES, SystemConstant.NUMBER_OF_PAGES);
 		model.addAttribute("blogs", blogs);
-		System.out.println(blogs);
+//		System.out.println(blogs);
 		//当前第几页
 	  	model.addAttribute("currentPage", _currentPage);//当前页码
 		PageSupport pageSupport=new PageSupport();
@@ -165,6 +172,14 @@ public class BlogController {
 //			System.out.println(blog.getId());
 			if(addBlog>0) {
 				attributes.addFlashAttribute("message", "添加博客成功");
+				//添加es博客对象
+				int savedocumentById = esServiceImpl.savedocumentById(nextId);
+				if(savedocumentById>0) {
+					System.out.println("es保存信息成功"+savedocumentById);
+				}else {
+					logger.info("es修改数据发生异常"+new Date()+blog.getId());
+					throw new RuntimeException("es保存信息成功");
+				}
 			}else {
 				attributes.addFlashAttribute("message", "添加博客失败");
 			}
@@ -174,6 +189,14 @@ public class BlogController {
 			tagService.insertByIdsTag(blog.getId(), MyUtils.convertToList(blog.getTagIds()));//保存标签
 			if(updateBlogById>0) {
 				attributes.addFlashAttribute("message", "修改博客成功");
+				//如果修改博客信息成功  同时修改es数据
+				int esUpdatedocumentById = esServiceImpl.updatedocumentById(blog.getId());
+				if(esUpdatedocumentById>0) {
+//					System.out.println("es修改信息成功"+esUpdatedocumentById);
+				}else {
+					logger.info("es修改数据发生异常"+new Date()+blog.getId());
+					throw new RuntimeException("es修改数据发生异常");
+				}
 			}else {
 				attributes.addFlashAttribute("message", "修改博客失败");
 			}
@@ -213,6 +236,14 @@ public class BlogController {
 		int delBlof = blogService.delBlof(id);
 		if(delBlof>0) {
 			attributes.addFlashAttribute("message", "删除成功");
+			//删除es
+			int deldocumentById = esServiceImpl.deldocumentById(id);
+			if(deldocumentById>0) {
+				System.out.println("删除es博客对象成功"+deldocumentById);
+			}else {
+				logger.info("es修改数据发生异常"+new Date()+id);
+				throw new RuntimeException("es修改数据发生异常");
+			}
 		}else {
 			attributes.addFlashAttribute("message", "删除失败");
 		}

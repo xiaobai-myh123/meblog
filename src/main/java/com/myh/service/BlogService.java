@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.myh.pojo.Blog;
+import com.myh.pojo.ESBlog;
 import com.myh.vo.VoBlog;
 
 /*
@@ -53,4 +54,12 @@ public interface BlogService {
 	public int addViewById(@Param("id") Long id);
 	
 	public int countBlogBypublicshed();
+	
+	/*es*/   
+	/**
+	 * 查询所有es  数据
+	 * @return
+	 */
+	public List<ESBlog> getListEsBlog();
+	/*es*/
 }

@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.myh.pojo.Blog;
+import com.myh.pojo.ESBlog;
 import com.myh.vo.VoBlog;
 
 //@CacheNamespace
@@ -63,8 +64,20 @@ public interface BlogMapper {
 	@Select("SELECT id,title,create_time,flag from t_blog where publicshed=1 and DATE_FORMAT(create_time,'%Y')=#{time}")
 	public  List<Blog> selectArchiesByYearTime(String time);
 	
-	//计算博客数量  只差发布的
+	//计算博客数量  只查发布的
 	@Select("select count(1) from t_blog where publicshed=1") 
 	public int countBlogBypublicshed();
 	/************************归档*******************************/
+	
+	/*es模块*/
+	
+	/*es搜索的博客*/
+	@Select("SELECT id,title,description,views,update_time,tag_ids,first_picture,type_id from t_blog")
+	public List<ESBlog> getListEsBlog();
+	//es文档更新  es是先查询数据库      然后更新es数据  所以是select 但是名字是update   根据博客id查找
+	@Select("SELECT id,title,description,views,update_time,tag_ids,first_picture,type_id from t_blog where id=#{id}")
+	public ESBlog updatedocumentById(Long id);
+	
+	
+	/*es模块*/
 }

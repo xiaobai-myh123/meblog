@@ -79,10 +79,10 @@ public class TagController {
 			attributes.addFlashAttribute("name", "分类名字不能为空");
 			return "admin/tags-input";
 		}
-		System.out.println(1);
+//		System.out.println(1);
 		Tag tag1 = tagServiceImpl.selectTagByTagName(tag.getName());
 		if (tag1 != null) {
-			result.rejectValue("name", "nameError", "不能添加重复的标签");
+			result.rejectValue("name", "nameError", "不能添加重复的标签");//手动添加错误
 		}
 		if (result.hasErrors()) {
 			return "admin/tags-input";

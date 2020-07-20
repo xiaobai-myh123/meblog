@@ -33,8 +33,8 @@
                 <!--分类列表区域-->
                 <div class="ui attached segment m-padded-tb-large   ">
                     <div class="ui labeled button m-margin-tb-tiny" th:each="type : ${types}">
-                        <a th:href="@{/types/}+${type.id}" href="#" class="ui basic button teal" th:classappend="${type.id==avtiveTypeId }? 'teal'" th:text="${type.name}">学习日志</a>
-                        <div class="ui basic left pointing label teal" th:classappend="${type.id==avtiveTypeId }? 'teal'"  th:text="${type.count}">
+                        <a th:href="@{/types/}+${type.id}" href="#" class="ui basic button" th:classappend="${type.id==avtiveTypeId }? 'teal'" th:text="${type.name}">学习日志</a>
+                        <div class="ui basic left pointing label" th:classappend="${type.id==avtiveTypeId }? 'teal'"  th:text="${type.count}">
                             12
                         </div>
                     </div>

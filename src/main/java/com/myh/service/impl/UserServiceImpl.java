@@ -21,5 +21,10 @@ public class UserServiceImpl implements UserService {
 	public User selectOne(String username, String password) {
 		return userMapper.selectOne(username,MD5Utils.code(password));
 	}
+
+	@Override
+	public User seleteNickNameAndAvatar() {
+		return userMapper.seleteNickNameAndAvatar();
+	}
 	
 }

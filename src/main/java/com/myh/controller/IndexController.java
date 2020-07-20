@@ -1,20 +1,25 @@
 package com.myh.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myh.pojo.Blog;
 import com.myh.pojo.Comment;
 import com.myh.service.BlogService;
 import com.myh.service.TagService;
 import com.myh.service.TypeService;
+import com.myh.service.UserService;
 import com.myh.service.impl.CommentServiceImpl;
+import com.myh.service.impl.EsServiceImpl;
 import com.myh.utils.MarkdownUtils;
 import com.myh.utils.PageSupport;
 import com.myh.utils.SystemConstant;
@@ -27,8 +32,10 @@ import com.myh.vo.VoType;
  *
  */
 @Controller
+@Transactional
 public class IndexController {
-
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private BlogService blogServiceImpl;
 	@Autowired
@@ -37,6 +44,9 @@ public class IndexController {
 	private TagService tagServiceImpl;
 	@Autowired
 	private CommentServiceImpl commentServiceImpl;
+	//注入es
+	@Autowired
+	private EsServiceImpl esServiceImpl;
 	/**
 	 * 	第一次进入首页展示
 	 * @param currentPage
@@ -122,13 +132,13 @@ public class IndexController {
 	//去博客详情  
    @GetMapping("/blog/{id}")
     public  String blog(@PathVariable("id") Long id,Model model) throws Exception{
-	     Blog blog = blogServiceImpl.select(id);
+	    //访问量加一
+       blogServiceImpl.addViewById(id); 
+	   Blog blog = blogServiceImpl.select(id);
 	    if(blog==null) {
 	    	System.out.println("首页从数据库拿到的博客详情为空");
 	    	throw new Exception("com.myh.controller.IndexController.blog 异常");
 	    }
-	    //访问量加一
-        blogServiceImpl.addViewById(id);
 	    String htmlGetContent = MarkdownUtils.markdownToHtmlExtensions(blog.getContent());
 	    //md -》html
 	    blog.setContent(htmlGetContent);
@@ -140,6 +150,23 @@ public class IndexController {
       	//博客的评论
       	List<Comment> comments = commentServiceImpl.getCommentById(id);
         model.addAttribute("comments",comments);
-        return "blog";
+        return "blog"; 
     }
+   	//博客搜索
+	@GetMapping("/search")
+	public String searchByInfo(@RequestParam("keyword") String keyword,
+			@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, Model model) {
+		model.addAttribute("keyword", keyword);
+		List<Map<String, Object>> listAll = esServiceImpl.getListAll(keyword, pageNo,10);
+		model.addAttribute("user", userService.seleteNickNameAndAvatar());
+		// 查询博客信息 不走数据库 走es
+		//查询的博客
+		model.addAttribute("listAll", listAll);
+		 //最受欢迎
+      	model.addAttribute("newblogs", blogServiceImpl.selectMostPopularBlog());
+    	//3. 获取标签的内容
+		List<VoTag> tags = tagServiceImpl.selectVoTagListLimit(null);
+		model.addAttribute("tags", tags);
+		return "search";
+	}
 }

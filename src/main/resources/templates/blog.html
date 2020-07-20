@@ -422,7 +422,7 @@ import javax.servlet.http.HttpServletResponse;
     <!--工具条-->
     <div id="toolbar" class="m-fixed m-right-button m-padded" style="display: none">
         <div class="ui vertical icon buttons" >
-            <button id="tocButton" type="button" class="ui teal button">目录</button>
+            <button id="tocButton" type="button" class="ui teal button"  th:if="${blog.commentabled}">目录</button>
             <a href="#conmment-container" class="ui teal button" th:if="${blog.commentabled}">留言</a>
             <button type="iconbutton" class="ui wc icon button"><i class="weixin icon"></i></button>
             <div id="toTop" href="#nav_menu" class="ui  icon button"><i class="chevron up icon"></i></div>
@@ -466,8 +466,8 @@ import javax.servlet.http.HttpServletResponse;
                     <h4 class="ui inverted header m-opacity-min">联系作者</h4>
                     <div class="ui inverted link list">
                         <a href="https://space.bilibili.com/393270022" class="item">b站</a>
-                        <a href="#" class="item">QQ:1515177029</a>
-                        <a href="#" class="item">邮箱:yerenping@aliyun.com</a>
+                        <a href="#" class="item"></a>
+                        <a href="#" class="item"></a>
                     </div>
                 </div>
                 <div class="seven wide column">

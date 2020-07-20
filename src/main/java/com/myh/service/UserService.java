@@ -11,4 +11,5 @@ import com.myh.pojo.User;
 public interface UserService {
 	//用户的登录
 	public User selectOne(String username, String password);
+	public User seleteNickNameAndAvatar();
 }
