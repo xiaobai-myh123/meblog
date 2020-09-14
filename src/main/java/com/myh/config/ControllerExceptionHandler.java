@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 **莫耀华:
 **@Description:   处理全局的异常
 */
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.myh.controller")
 //处理Controller的Exception的异常
 public class ControllerExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
@@ -30,8 +30,9 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
     public ModelAndView handleException(HttpServletRequest request, Exception e) throws Exception {
     	//如果抛出的异常没有转态码 就去error 和自定义异常一起使用
-        logger.error("Request URL : {} , Exception : {}", request.getRequestURL(), e);
+        logger.error("Request URL : {} , Exception : {}", request.getRequestURL(), e.getMessage());
         if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
+        	System.out.println("err");
             throw e;
         }
         ModelAndView mav = new ModelAndView();

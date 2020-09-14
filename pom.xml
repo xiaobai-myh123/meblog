@@ -57,6 +57,7 @@
 			<artifactId>druid</artifactId>
 			<version>1.1.20</version>
 		</dependency>
+		
 		<!--引入Markdown转HTML的插件 -->
 		<dependency>
 			<groupId>com.atlassian.commonmark</groupId>
@@ -144,7 +145,12 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-
+      <!--上传文件工具类-->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.4</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

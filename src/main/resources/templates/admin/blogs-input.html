@@ -230,6 +230,7 @@
 <script th:src="@{/lib/editormd/editormd.min.js}"></script>
 <!--声明行内js代码域-->
 <script>
+var imageUploadURL=location.href.substr(0,location.href.lastIndexOf('/'))+"/uploadImg";
     /*Markdown插件集成*/
     var testEditor;
     $(function () {
@@ -238,10 +239,13 @@
             height : 500,
             syncScrolling: true,/*双向滚动*/
             // path    : "../../static/lib/editormd/lib/"
-            path: "/lib/editormd/lib/"
+            path: "/lib/editormd/lib/",
+            imageUpload : true,
+            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : imageUploadURL
         });
     });
-    /*移动端显示导航栏设置*/
+    /*移动端显示导航栏设置*/ 
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
