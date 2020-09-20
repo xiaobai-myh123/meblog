@@ -1,5 +1,6 @@
 package com.myh.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,4 +63,10 @@ public interface BlogService {
 	 */
 	public List<ESBlog> getListEsBlog();
 	/*es*/
+	
+	
+	/****
+	 * api模块   使用分页插件
+	 */
+	public List<Blog> selectBlogListApi(Map<String, Object> map);
 }

@@ -33,6 +33,7 @@
 		<result column="title" property="title" />
 		<result column="publicshed" property="publicshed" />
 		<result column="recommend" property="recommend" />
+		<result column="create_time" property="createTime" />
 		<result column="update_time" property="updateTime" />
 		<association property="type" javaType="Type">
 			<result column="type_id" property="id" />
@@ -164,6 +165,8 @@
 		ORDER BY update_time desc,b.id desc 
 		limit #{currentPageNo},#{pageSize}
 	</select>
+	
+	
 	<!-- 计算博客数量  -->
 	<select id="countBlog" resultType="int">
 		select count(1) from t_blog 
@@ -254,6 +257,27 @@
 		and b.id in (SELECT blogs_id  from t_blog_tags where tags_id=#{tagId})
 		ORDER BY update_time DESC,u.id DESC 
 		LIMIT #{currentPageNo},#{pageSize}
+	</select>
+	
+	<!-- Api -->
+		<!-- 根据条件查询博客 -->
+	<select id="selectBlogListApi" resultMap="blogLimitOne">
+		select b.id,title,t.name,recommend,publicshed,update_time,b.type_id
+		from  t_blog b,t_type t 
+		where b.type_id=t.id 
+		<if test="title!=null and title!=''">
+			and title LIKE CONCAT('%',#{title},'%') 
+		</if>
+		<if test="typeId!=null and typeId!=0">
+			and type_id=#{typeId} 
+		</if>
+		<if test="recommend!=null and recommend!=0">
+			and recommend=#{recommend}
+		</if>
+		<if test="publicshed!=null and publicshed!=0">
+			and publicshed=#{publicshed}
+		</if>
+		ORDER BY update_time desc,b.id desc 
 	</select>
 	
 </mapper> 

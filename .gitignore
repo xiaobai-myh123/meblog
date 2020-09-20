@@ -12,6 +12,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.tern-project
 
 ### IntelliJ IDEA ###
 .idea
@@ -23,6 +24,7 @@ target/
 /nbproject/private/
 /nbbuild/
 /log/
+/README.assets/
 /dist/
 /nbdist/
 /.nb-gradle/

@@ -193,4 +193,13 @@ public class BlogServiceImpl implements BlogService{
 	public List<ESBlog> getListEsBlog() {
 		return blogMapper.getListEsBlog();
 	}
+	/****
+	 * api模块   使用分页插件
+	 */
+
+	@Override
+	public List<Blog> selectBlogListApi(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return blogMapper.selectBlogListApi(map);
+	}
 }

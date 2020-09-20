@@ -1,5 +1,6 @@
 package com.myh.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,10 @@ public interface BlogMapper {
 	@Select("SELECT id,title,description,views,update_time,tag_ids,first_picture,type_id from t_blog where id=#{id}")
 	public ESBlog updatedocumentById(Long id);
 	
-	
 	/*es模块*/
+	
+	/****
+	 * api模块   使用分页插件
+	 */
+	public List<Blog> selectBlogListApi(Map<String, Object> map);
 }
